@@ -1,10 +1,13 @@
+import 'dart:math';
 import 'package:carol_libreria/admin_screen.dart';
-import 'package:carol_libreria/geo_screen.dart';
-import 'package:carol_libreria/user_screen.dart';
+import 'package:carol_libreria/confirmarCodigoLogin.dart';
 import 'package:carol_libreria/db_helper.dart';
+import 'package:carol_libreria/geo_screen.dart';
+import 'package:carol_libreria/local_auth.dart';
+import 'package:carol_libreria/mainHelper.dart';
+import 'package:carol_libreria/restablecerContra.dart';
 import 'package:flutter/material.dart';
 import 'register_screen.dart';
-import 'recover_password_screen.dart'; 
 import 'package:provider/provider.dart'; // Agregar esta importación
 import 'theme_notifier.dart'; // Importar el archivo que contiene el ThemeNotifier
 
@@ -24,7 +27,7 @@ class MyApp extends StatelessWidget {
     final themeNotifier = Provider.of<ThemeNotifier>(context);
 
     return MaterialApp(
-      title: 'Carol Libreria',
+      title: 'CE Store',
       themeMode: themeNotifier.themeMode, // Establecer el tema actual
       theme: ThemeData.light(), // Tema claro
       darkTheme: ThemeData.dark(), // Tema oscuro
@@ -47,6 +50,7 @@ class _LoginScreen extends State<LoginScreen> {
   bool _hasLetter = false;
   bool _hasNumber = false;
   bool _hasSpecialChar = false;
+  bool auth = false;
 
   void registrarse() {
     Navigator.pushReplacement(
@@ -58,38 +62,114 @@ class _LoginScreen extends State<LoginScreen> {
   void recuperarContrasena() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => RecuperarPassScreen()),
+      MaterialPageRoute(builder: (context) => restablecerContraScreen()),
     );
   }
 
-  void login_user() async {
-    List<Map<String, dynamic>> obtenerRol = await SQLHelper.getSingleUser(
-      _usuarioEditingController.text, _passEditingController.text);
-    final correo = obtenerRol[0]['correo'];
+   // Método para mostrar un cuadro de diálogo con el mensaje de error
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Error'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Aceptar'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
-    if (obtenerRol.isNotEmpty){
-      _rolEditingController = obtenerRol[0]['rol'];
-    }
+
+  // void login_user() async {
+  //   List<Map<String, dynamic>> obtenerRol = await SQLHelper.getSingleUser(
+  //     _usuarioEditingController.text, _passEditingController.text);
+  //   final correo = obtenerRol[0]['correo'];
+
+  //   if (obtenerRol.isNotEmpty){
+  //     _rolEditingController = obtenerRol[0]['rol'];
+  //   }
+
+  //   bool _isLogin = await SQLHelper.login_user(
+  //     _usuarioEditingController.text, _passEditingController.text, _rolEditingController);
+
+  //   if (_isLogin && _rolEditingController == 1){
+  //     Navigator.pushReplacement(
+  //         context, MaterialPageRoute(builder: (context) => AdminPage(correoUser: correo)));
+  //   } else if (_isLogin && _rolEditingController == 2){
+  //     Navigator.pushReplacement(
+  //         context, MaterialPageRoute(builder: (context) => UsuarioScreen(correoUser: correo)));
+  //   } else {
+  //     showDialog(
+  //       context: context,
+  //       builder: (context) => AlertDialog(
+  //         title: Text('Error'),
+  //         content: Text('Usuario o contraseña incorrectos'),
+  //       ),
+  //     );
+  //   }
+  // }
+
+  void login_user() async {
+  List<Map<String, dynamic>> obtenerRol = await SQLHelper.getSingleUser(
+    _usuarioEditingController.text,
+    _passEditingController.text,
+  );
+
+  if (obtenerRol.isNotEmpty) {
+    final correo = obtenerRol[0]['correo'];
+    final rol = obtenerRol[0]['rol'];
 
     bool _isLogin = await SQLHelper.login_user(
-      _usuarioEditingController.text, _passEditingController.text, _rolEditingController);
+      _usuarioEditingController.text,
+      _passEditingController.text,
+      rol,
+    );
 
-    if (_isLogin && _rolEditingController == 1){
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => AdminPage(userEmail: correo)));
-    } else if (_isLogin && _rolEditingController == 2){
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => UserPage(userEmail: correo)));
-    } else {
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text('Error'),
-          content: Text('Usuario o contraseña incorrectos'),
+    String _generateConfirmationCode() {
+  final random = Random();
+  return String.fromCharCodes(
+    List.generate(6, (_) => random.nextInt(10) + 48), // Código de 6 dígitos
+  );
+}
+
+
+    if (_isLogin) {
+      // Generar código único
+      String code = _generateConfirmationCode();
+      int expiry = DateTime.now().add(Duration(minutes: 10)).millisecondsSinceEpoch;
+
+      // Guardar código en la base de datos
+      await SQLHelper.saveConfirmationCodeLogin(correo, code, expiry);
+
+      // Enviar código por correo
+      await MailHelper1.sendConfirmationCode(correo, code);
+
+      // Navegar a la pantalla de verificación
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => VerificationScreen(
+            correo: correo,
+            rol: rol,
+          ),
         ),
       );
+    } else {
+      _showErrorDialog("Usuario o contraseña incorrectos");
     }
+  } else {
+    _showErrorDialog("Usuario o contraseña incorrectos");
   }
+}
+
 
   void _validateInputs() {
     setState(() {
@@ -121,33 +201,28 @@ class _LoginScreen extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 157, 176, 255),
+        backgroundColor: const Color.fromARGB(255, 9, 8, 44),
         title: Text(
-          'CAROL LIBRERIA',
+          'CE Store',
+          textAlign: TextAlign.center,
           style: TextStyle(
-            fontFamily: 'DancingScript',
-            fontSize: 26,
-            fontWeight: FontWeight.bold,
             color: Colors.white,
-            letterSpacing: 1.2,
           ),
         ),
         centerTitle: true,
         actions: [
           IconButton(
-            icon: Icon(Icons.location_on, color: Colors.white,),
+            icon: Icon(Icons.location_on, color: Colors.white),
             tooltip: 'Ubicación',
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                  builder: (context) => GeolocatorWidget(),
-                ),
+                MaterialPageRoute(builder: (context) => GeolocatorWidget()),
               );
             },
           ),
           IconButton(
-            icon: Icon(Icons.sunny, color: Colors.white),
+            icon: Icon(Icons.brightness_6, color: Colors.white),
             tooltip: 'Cambiar Tema',
             onPressed: () {
               // Cambiar el tema al presionar el botón
@@ -157,6 +232,18 @@ class _LoginScreen extends State<LoginScreen> {
           ),
         ],
       ),
+      floatingActionButton: auth == true
+          ? null
+          : FloatingActionButton(
+              onPressed: () async {
+                final authen = await LocalAuth.authenticate();
+                if (authen){
+                  auth = false;
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => AdminPage(userEmail: "")));//se debe cambiar
+                }
+              },
+              child: const Icon(Icons.fingerprint),
+            ),
       body: Center(
         child: SingleChildScrollView(
           child: Padding(
@@ -166,7 +253,7 @@ class _LoginScreen extends State<LoginScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Image.network(
-                  'https://img.freepik.com/vector-premium/libro-luna-estrellas-el_730620-510344.jpg',
+                  'https://steamuserimages-a.akamaihd.net/ugc/795364376392144071/C27E4FC2EF96E61787AB5524D35AAFE4D32DB942/?imw=5000&imh=5000&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false',
                   height: 150,
                   width: 150,
                 ),
@@ -177,7 +264,7 @@ class _LoginScreen extends State<LoginScreen> {
                   style: TextStyle(
                     fontSize: 35,
                     fontWeight: FontWeight.bold,
-                    color: const Color.fromARGB(255, 157, 176, 255),
+                    color: const Color.fromARGB(255, 9, 8, 44),
                   ),
                 ),
                 SizedBox(height: 30),
@@ -245,7 +332,7 @@ class _LoginScreen extends State<LoginScreen> {
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     padding: EdgeInsets.symmetric(vertical: 16.0),
-                    backgroundColor: const Color.fromARGB(255, 157, 176, 255),
+                    backgroundColor: const Color.fromARGB(255, 9, 8, 44),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10.0),
                     ),
@@ -271,7 +358,7 @@ class _LoginScreen extends State<LoginScreen> {
                       child: Text(
                         'Regístrate aquí',
                         style: TextStyle(
-                          color: Color.fromARGB(255, 157, 176, 255),
+                          color: Colors.green,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -286,7 +373,7 @@ class _LoginScreen extends State<LoginScreen> {
                       child: Text(
                         '¿Olvidaste tu contraseña?',
                         style: TextStyle(
-                          color: Color.fromARGB(255, 157, 176, 255),
+                          color: Colors.green,
                           fontWeight: FontWeight.bold,
                         ),
                       ),

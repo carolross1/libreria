@@ -97,58 +97,41 @@ class MailHelper {
     }
   }
 }
+
 class MailHelper1 {
-  static Future<void> sendRecoveryEmail(String correo, String nuevaContrasenia) async {
-    String username = 'carolrios347@gmail.com'; 
-    String password = 'hguo fhdw tbvm nmyx'; 
+  static Future<void> sendConfirmationCode(String correo, String code) async {
+    // Información de autenticación
+    String username = 'cynthiajanethgranados@gmail.com';
+    String password = 'ecoz crzg caii qpyy';
 
     final smtpServer = gmail(username, password);
+
+    // Crear el mensaje
     final message = Message()
-      ..from = Address(username, 'Recuperación de Contraseña')
+      ..from = Address(username, 'Cynthia Estrada')
       ..recipients.add(correo)
-      ..subject = 'Recuperación de Contraseña - ${DateTime.now()}'
+      ..subject = 'Código de Confirmación'
       ..html = """
-        <html>
-          <head>
-            <style>
-              body { font-family: Arial, sans-serif; background-color: #f0f0f0; color: #333; padding: 20px; }
-              h1 { color: #94c1ff; }
-              p { margin: 5px 0; font-size: 16px; }
-              .highlight { color: #005D8F; font-weight: bold; }
-              .container {
-                background-color: #ffffff;
-                border: 1px solid #ddd;
-                border-radius: 8px;
-                padding: 20px;
-                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-              }
-              .footer {
-                margin-top: 20px;
-                font-size: 14px;
-                color: #555;
-              }
-            </style>
-          </head>
-          <body>
-            <h1>Recuperación de Contraseña</h1>
-            <div class="container">
-              
-              <p>Hola,hemos recibido tu solicitud para restablecer tu contraseña.</p>
-              <p>Tu nueva contraseña es:</p>
-              <p class="highlight">$nuevaContrasenia</p>
-              <p>Ingresa tu usuario y tu nueva contraseña para poder ingresar en la aplicación.</p>
-            </div>
-            <div class="footer">
-              <p>Si no solicitaste este cambio, envia un correo a carolrios347@gmail.com.</p>
-              <p>Gracias por usar nuestra aplicación.</p>
-            </div>
-          </body>
-        </html>
+        <div style="width: 100%; max-width: 600px; margin: auto; font-family: Arial, sans-serif; color: #444;">
+          <div style="background-color: #008FF7; color: white; padding: 20px; text-align: center; border-radius: 8px;">
+            <h1 style="margin: 0;">Código de Confirmación</h1>
+          </div>
+          
+          <div style="padding: 20px; background-color: #ffffff; text-align: center;">
+            <p style="font-size: 18px; color: #333;">Tu código de confirmación es:</p>
+            <h2 style="font-size: 36px; color: #008FF7; margin: 10px 0;">$code</h2>
+            <p style="font-size: 14px; color: #666;">Este código es válido por 10 minutos.</p>
+          </div>
+          
+          <div style="background-color: #f3f3f3; padding: 15px; text-align: center; border-radius: 8px;">
+            <p style="margin: 0; color: #666;">Si no solicitaste este código, ignora este mensaje.</p>
+          </div>
+        </div>
       """;
 
     try {
-      await send(message, smtpServer);
-      print('Correo de recuperación enviado a $correo');
+      final sendReport = await send(message, smtpServer);
+      print('Correo enviado: ${sendReport.toString()}');
     } on MailerException catch (e) {
       print('Error al enviar el correo: $e');
     }
