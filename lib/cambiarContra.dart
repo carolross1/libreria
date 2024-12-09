@@ -118,7 +118,7 @@ class _CambiarContraScreenState extends State<CambiarContraScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Cambiar Contraseña'),
-        backgroundColor: Color(0xFF008FF7),
+        backgroundColor: Color.fromARGB(255, 157, 176, 255),
       ),
       backgroundColor: Color(0xFFDFE7E4),
       body: GestureDetector(
@@ -218,7 +218,7 @@ class _CambiarContraScreenState extends State<CambiarContraScreen> {
                           }
                         : null,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFF008FF7),
+                      backgroundColor: Color.fromARGB(255, 157, 176, 255),
                     ),
                     child: Text(
                       'Cambiar Contraseña',

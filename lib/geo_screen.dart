@@ -14,7 +14,7 @@ class _GeolocatorWidgetState extends State<GeolocatorWidget> {
   LatLng _currentPosition = LatLng(0, 0);
   bool _isLoading = true;
 
-  // Ubicación fija (por ejemplo, Ciudad de México)
+  // Ubicación fija (por ejemplo
   final LatLng _fixedLocation = LatLng(21.152622154171187, -100.93904392926505);
 
   @override

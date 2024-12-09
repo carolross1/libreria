@@ -44,12 +44,12 @@ class SQLHelper {
 
     await database.execute("""
       INSERT INTO user_app (nombre, usuario, correo, pass, rol, createdAT)
-      VALUES ('admin', 'admin', 'carolrios347@gmail.com', '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918', '1', ''
+      VALUES ('admin', 'admin', 'cynthiajanethgranados@gmail.com', '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918', '1', ''
     )""");
 
     await database.execute("""
       INSERT INTO user_app (nombre, usuario, correo, pass, rol, createdAT)
-      VALUES ('sadmin', 'sadmin', 'cynthiajanethgranados@gmail.com', '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918', '1', ''
+      VALUES ('sadmin', 'sadmin', 'carolrios347@gmail.com', '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918', '1', ''
     )""");
 
     await database.execute("""
@@ -103,7 +103,7 @@ static Future<int> updatePassword(
   }
 
   static Future<sql.Database> db() async {
-    return sql.openDatabase("database_app22.db", version: 1,
+    return sql.openDatabase("database_app23.db", version: 1,
         onCreate: (sql.Database database, int version) async {
       await createTables(database);
     });

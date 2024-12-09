@@ -61,7 +61,7 @@ class _ConfirmCodeScreenState extends State<ConfirmCodeScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Código de Confirmación'),
-        backgroundColor: Color(0xFF008FF7),
+        backgroundColor: Color.fromARGB(255, 157, 176, 255),
       ),
       backgroundColor: Color(0xFFDFE7E4),
       body: Center(
@@ -72,34 +72,47 @@ class _ConfirmCodeScreenState extends State<ConfirmCodeScreen> {
             children: [
               Text(
                 'Reestablecer Contraseña',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                // style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                                fontSize: 25,
+                                fontWeight: FontWeight.bold,
+                                color: const Color.fromARGB(255, 157, 176, 255),
+              ),
               ),
               SizedBox(height: 20),
               Text(
-                'Introduce el código que enviamos al correo:',
+                'Ingresa el código que enviamos a:',
                 textAlign: TextAlign.center,
+                // style: TextStyle(
+                //   fontWeight: FontWeight.bold,
+                //   fontSize: 16,
+                // ),
                 style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: const Color.fromARGB(255, 149, 170, 255),
               ),
+              ),
+              
               Text(
                 widget.email,
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 16),
+                style: TextStyle(fontSize: 18),
+          
               ),
               SizedBox(height: 16),
               Text(
                 'Tienes $_seconds segundos para confirmar',
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 16),
+                style: TextStyle(fontSize: 16, color: Color.fromARGB(255, 226, 157, 255)),
+
               ),
               SizedBox(height: 16),
               TextField(
                 controller: codeController,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
-                  labelText: 'Código',
+                  labelText: 'Ingrese el Código',
                   border: OutlineInputBorder(),
                 ),
               ),
@@ -131,11 +144,18 @@ class _ConfirmCodeScreenState extends State<ConfirmCodeScreen> {
                   }
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFF008FF7),
+                  backgroundColor: Color.fromARGB(255, 157, 176, 255),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
                 ),
                 child: Text(
                   'Confirmar',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                  // style: TextStyle(fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,),
                 ),
               ),
             ],

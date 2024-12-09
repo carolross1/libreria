@@ -101,25 +101,25 @@ class MailHelper {
 class MailHelper1 {
   static Future<void> sendConfirmationCode(String correo, String code) async {
     // Información de autenticación
-    String username = 'cynthiajanethgranados@gmail.com';
-    String password = 'ecoz crzg caii qpyy';
+    String username = 'carolrios347@gmail.com';
+    String password = 'hguo fhdw tbvm nmyx';
 
     final smtpServer = gmail(username, password);
 
     // Crear el mensaje
     final message = Message()
-      ..from = Address(username, 'Cynthia Estrada')
+      ..from = Address(username, 'Carol Rios')
       ..recipients.add(correo)
       ..subject = 'Código de Confirmación'
       ..html = """
         <div style="width: 100%; max-width: 600px; margin: auto; font-family: Arial, sans-serif; color: #444;">
-          <div style="background-color: #008FF7; color: white; padding: 20px; text-align: center; border-radius: 8px;">
-            <h1 style="margin: 0;">Código de Confirmación</h1>
+          <div style="background-color: #005D8F; color: white; padding: 20px; text-align: center; border-radius: 8px;">
+            <h1 style="margin: 0;">Código de Confirmación </h1>
           </div>
           
           <div style="padding: 20px; background-color: #ffffff; text-align: center;">
-            <p style="font-size: 18px; color: #333;">Tu código de confirmación es:</p>
-            <h2 style="font-size: 36px; color: #008FF7; margin: 10px 0;">$code</h2>
+            <p style="font-size: 18px; color: #333;">Tu código de confirmación es: </p>
+            <h2 style="font-size: 36px; color: #005D8F; margin: 10px 0;">$code</h2>
             <p style="font-size: 14px; color: #666;">Este código es válido por 10 minutos.</p>
           </div>
           

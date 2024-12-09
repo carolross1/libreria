@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carol_libreria/admin_screen.dart';
 import 'package:carol_libreria/confirmarCodigoLogin.dart';
 import 'package:carol_libreria/db_helper.dart';
@@ -23,18 +24,42 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // Obtener el tema actual del ThemeNotifier
-    final themeNotifier = Provider.of<ThemeNotifier>(context);
-
-    return MaterialApp(
-      title: 'CE Store',
-      themeMode: themeNotifier.themeMode, // Establecer el tema actual
-      theme: ThemeData.light(), // Tema claro
-      darkTheme: ThemeData.dark(), // Tema oscuro
+final themeNotifier = Provider.of<ThemeNotifier>(context);
+ return MaterialApp(
+  themeMode: themeNotifier.themeMode,
+   darkTheme: ThemeData.dark(), // Tema oscuro
+      theme: ThemeData.light().copyWith(
+        primaryColor: const Color.fromARGB(255, 157, 176, 255),
+        appBarTheme: AppBarTheme(
+          backgroundColor: const Color.fromARGB(255, 157, 176, 255),
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color.fromARGB(255, 157, 176, 255),
+          ),
+        ),
+      ),
       home: LoginScreen(),
     );
   }
 }
+// class MyApp extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     // Obtener el tema actual del ThemeNotifier
+//     final themeNotifier = Provider.of<ThemeNotifier>(context);
+
+//     return MaterialApp(
+//       title: 'CE Store',
+//       themeMode: themeNotifier.themeMode, // Establecer el tema actual
+//       theme: ThemeData.light(), // Tema claro
+//       darkTheme: ThemeData.dark(), // Tema oscuro
+//       home: LoginScreen(),
+//     );
+//   }
+// }
+
+
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -201,9 +226,9 @@ class _LoginScreen extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 9, 8, 44),
+        backgroundColor: const Color.fromARGB(255, 157, 176, 255),
         title: Text(
-          'CE Store',
+          'CAROL LIBRERIA',
           textAlign: TextAlign.center,
           style: TextStyle(
             color: Colors.white,
@@ -222,7 +247,7 @@ class _LoginScreen extends State<LoginScreen> {
             },
           ),
           IconButton(
-            icon: Icon(Icons.brightness_6, color: Colors.white),
+            icon: Icon(Icons.sunny, color: Colors.white),
             tooltip: 'Cambiar Tema',
             onPressed: () {
               // Cambiar el tema al presionar el botón
@@ -242,7 +267,9 @@ class _LoginScreen extends State<LoginScreen> {
                   Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => AdminPage(userEmail: "")));//se debe cambiar
                 }
               },
-              child: const Icon(Icons.fingerprint),
+              
+              child: 
+              const Icon(Icons.fingerprint,color: Color.fromARGB(255, 145, 167, 255),size: 48,),
             ),
       body: Center(
         child: SingleChildScrollView(
@@ -252,11 +279,17 @@ class _LoginScreen extends State<LoginScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Image.network(
-                  'https://steamuserimages-a.akamaihd.net/ugc/795364376392144071/C27E4FC2EF96E61787AB5524D35AAFE4D32DB942/?imw=5000&imh=5000&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false',
-                  height: 150,
-                  width: 150,
+              CachedNetworkImage(
+                imageUrl: 'https://img.freepik.com/vector-premium/libro-luna-estrellas-el_730620-510344.jpg',
+                height: 150,
+                width: 150,
+                placeholder: (context, url) => Center(
+                  child: CircularProgressIndicator(), // Indicador de carga.
                 ),
+                errorWidget: (context, url, error) => Center(
+                  child: Icon(Icons.error, size: 50, color: Colors.red), // Ícono si hay error.
+                ),
+              ),
                 SizedBox(height: 20),
                 Text(
                   'Iniciar Sesión',
@@ -264,7 +297,7 @@ class _LoginScreen extends State<LoginScreen> {
                   style: TextStyle(
                     fontSize: 35,
                     fontWeight: FontWeight.bold,
-                    color: const Color.fromARGB(255, 9, 8, 44),
+                    color: const Color.fromARGB(255, 157, 176, 255),
                   ),
                 ),
                 SizedBox(height: 30),
@@ -332,7 +365,7 @@ class _LoginScreen extends State<LoginScreen> {
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     padding: EdgeInsets.symmetric(vertical: 16.0),
-                    backgroundColor: const Color.fromARGB(255, 9, 8, 44),
+                    backgroundColor: const Color.fromARGB(255, 157, 176, 255),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10.0),
                     ),
@@ -358,7 +391,7 @@ class _LoginScreen extends State<LoginScreen> {
                       child: Text(
                         'Regístrate aquí',
                         style: TextStyle(
-                          color: Colors.green,
+                          color: const Color.fromARGB(255, 157, 176, 255),
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -373,7 +406,7 @@ class _LoginScreen extends State<LoginScreen> {
                       child: Text(
                         '¿Olvidaste tu contraseña?',
                         style: TextStyle(
-                          color: Colors.green,
+                          color: const Color.fromARGB(255, 157, 176, 255),
                           fontWeight: FontWeight.bold,
                         ),
                       ),

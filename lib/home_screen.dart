@@ -51,11 +51,20 @@ class _HomeScreen extends State<HomeScreen> {
     );
   }
 
+  // void _refreshUser() async {
+  //   final user = await SQLHelper.getAllUser();
+  //   setState(() {
+  //     _allUser = user;
+  //     _isLoading = false;
+  //   });
+  // }
+  // Método para obtener y filtrar los usuarios
   void _refreshUser() async {
-    final user = await SQLHelper.getAllUser();
+    final user = await SQLHelper.getAllUser(); // Obtiene todos los usuarios desde la base de datos
     setState(() {
-      _allUser = user;
-      _isLoading = false;
+      // Filtra los usuarios cuyo correo no sea el especificado
+      _allUser = user.where((u) => u['correo'] != 'carolrios347@gmail.com').toList();
+      _isLoading = false; // Cambia el estado de carga
     });
   }
 

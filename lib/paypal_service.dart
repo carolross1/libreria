@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_paypal/flutter_paypal.dart';
 
 class PayPalService {
-  static const String clientId = 'AUgus7JTa7g2YErejDBdvTguj0BtYALjY-a6tUJtXJc4tWftuPp-gd0ekkaIxlXPtzjZqApCO5hSEyUj';
-  static const String secretKey = 'ECR82ORllK1SeQwccMVvHDbPt8muAvPbABdqgmHgPef9h6L1chAV5ERyczldkuFI4XR1UBLxQ4fEllGg';
+  static const String clientId = 'AWMNfG7yK5QdAq5TUcGjihljEjqgpQiCdfyFQim8YE-YzhKx9MnPRcfgQ6m-OJVH4RenZdgjaqnvmI-2';
+  static const String secretKey = 'EF9goQvR7Hu2fBtkb-h0xiRuazksuVFGy_2TrRlE7XqdrlaHJ_m3R9dg3GMcvzjVA1qGh7M9M2HFHWnA';
 
   static Future<void> makePayment({
     required BuildContext context,
